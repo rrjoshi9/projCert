@@ -31,6 +31,7 @@ pipeline {
             }
         }
 
+        //Development part
         stage('Deploy to Dev') {
             when {
                 branch 'dev'
