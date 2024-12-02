@@ -37,7 +37,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'ansible-playbook -i ansible/hosts ansible/deploy.yml --extra-vars "env=dev"'
+                    sh 'ansible-playbook -i ansible/hosts/inventory.ini ansible/deploy.yml --extra-vars "env=dev"'
                 }
             }
         }
