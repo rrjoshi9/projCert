@@ -32,38 +32,43 @@ pipeline {
         }
 
         stage('Deploy to Dev') {
-            when {
-                branch 'dev'
-            }
-            steps {
-                script {
-                    sh 'ansible-playbook -i ansible/hosts/inventory.ini /var/lib/jenkins/workspace/final-project/ansible/deploy.yml --extra-vars "env=dev"'
-                }
-            }
-        }
-
-        stage('Deploy to Stage') {
-            when {
-                branch 'stage'
-            }
-            steps {
-                script {
-                    sh 'ansible-playbook -i ansible/hosts ansible/deploy.yml --extra-vars "env=stage"'
-                }
-            }
-        }
-
-        stage('Deploy to Prod') {
-            when {
-                branch 'prod'
-            }
-            steps {
-                script {
-                    sh 'ansible-playbook -i ansible/hosts ansible/deploy.yml --extra-vars "env=prod"'
-                }
+    steps {
+        script {
+            echo "Current branch: ${env.BRANCH_NAME}"  // Print the branch name
+            if (env.BRANCH_NAME == 'dev') {
+                sh 'ansible-playbook -i ansible/hosts ansible/deploy.yml --extra-vars "env=dev"'
+            } else {
+                echo "Skipping deployment as not on the dev branch"
             }
         }
     }
+}
+
+        stage('Deploy to Stage') {
+    steps {
+        script {
+            echo "Current branch: ${env.BRANCH_NAME}"  // Print the branch name
+            if (env.BRANCH_NAME == 'stage') {
+                sh 'ansible-playbook -i ansible/hosts ansible/deploy.yml --extra-vars "env=stage"'
+            } else {
+                echo "Skipping deployment as not on the dev branch"
+            }
+        }
+    }
+}
+
+        stage('Deploy to Prod') {
+    steps {
+        script {
+            echo "Current branch: ${env.BRANCH_NAME}"  // Print the branch name
+            if (env.BRANCH_NAME == 'prod') {
+                sh 'ansible-playbook -i ansible/hosts ansible/deploy.yml --extra-vars "env=prod"'
+            } else {
+                echo "Skipping deployment as not on the dev branch"
+            }
+        }
+    }
+}
 
     post {
         always {
